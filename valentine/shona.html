@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Be My Valentine 💖</title>
+  <title>Valentine Proposal 💘</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Poppins", "Segoe UI", sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -44,78 +45,43 @@
       opacity: 0;
     }
 
-    /* Heart particles that pop from all sides */
+    /* Heart particles that pop from buttons */
     .heart-particle {
-      position: fixed;
+      position: absolute;
       font-size: 24px;
       pointer-events: none;
       z-index: 10;
-      animation: heartPop 1.5s ease-out forwards;
+      animation: heartPop 1.2s ease-out forwards;
     }
 
-    /* Edge heart spawners */
-    .edge-heart {
+    /* Falling hearts for final message */
+    .falling-heart {
       position: fixed;
+      top: -50px;
       font-size: 30px;
       pointer-events: none;
-      z-index: 5;
-      opacity: 0;
-      animation: edgeHeartFloat 3s ease-out forwards;
+      z-index: 1999;
+      animation: heartFall 8s linear infinite;
     }
 
-    /* Main container */
-    .container {
-      text-align: center;
+    /* Main card */
+    .card {
+      background: rgba(255, 255, 255, 0.12);
       padding: 35px 25px 45px;
       border-radius: 28px;
-      background: rgba(255, 255, 255, 0.12);
+      text-align: center;
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3),
-                  0 0 60px rgba(255, 255, 255, 0.15),
-                  inset 0 0 30px rgba(255, 255, 255, 0.1);
+                  0 0 60px rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(15px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       max-width: 500px;
       width: 92%;
       position: relative;
       z-index: 2;
-      animation: containerFloat 8s ease-in-out infinite;
+      animation: cardFloat 8s ease-in-out infinite;
     }
 
-    .container::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-      transform: rotate(45deg);
-      animation: shine 10s infinite linear;
-    }
-
-    /* Sparkles */
-    .sparkles::before,
-    .sparkles::after {
-      content: "✨";
-      position: absolute;
-      font-size: 26px;
-      opacity: 0.8;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    .sparkles::before {
-      top: -10px;
-      left: 10px;
-    }
-
-    .sparkles::after {
-      top: -10px;
-      right: 10px;
-      animation-delay: 1s;
-    }
-
-    /* Heart beat */
-    .heart-beat {
+    .title-heart {
       font-size: 70px;
       margin-bottom: 15px;
       animation: heartbeat 1.5s ease-in-out infinite;
@@ -125,7 +91,7 @@
 
     h1 {
       font-size: 2.3rem;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       background: linear-gradient(45deg, #fff, #ffe6e6, #fff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -135,17 +101,33 @@
       letter-spacing: 1px;
     }
 
-    h2 {
-      font-size: 1.4rem;
-      margin-bottom: 25px;
-      opacity: 0.9;
+    p.subtitle {
+      font-size: 1.2rem;
+      font-weight: 500;
+      opacity: 0;
+      margin-bottom: 0;
+      line-height: 1.6;
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
     }
 
-    .btn-group {
+    p.subtitle.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .buttons-row {
       display: flex;
       justify-content: center;
-      gap: 20px;
-      margin-top: 10px;
+      gap: 25px;
+      margin-top: 30px;
       position: relative;
     }
 
@@ -153,7 +135,7 @@
       border: none;
       padding: 16px 36px;
       border-radius: 50px;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       cursor: pointer;
       transition: all 0.3s ease;
       position: relative;
@@ -171,24 +153,6 @@
       color: #fff;
       box-shadow: 0 15px 35px rgba(255, 46, 99, 0.5);
       border: 2px solid rgba(255, 255, 255, 0.3);
-    }
-
-    #yesBtn::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -40%;
-      width: 40%;
-      height: 100%;
-      background: linear-gradient(120deg, rgba(255, 255, 255, 0.4), transparent);
-      transform: skewX(-25deg);
-      opacity: 0;
-      transition: all 0.4s ease;
-    }
-
-    #yesBtn:hover::before {
-      left: 140%;
-      opacity: 1;
     }
 
     #yesBtn:hover {
@@ -216,11 +180,11 @@
       transition: transform 0.3s ease, left 0.4s ease, top 0.4s ease !important;
     }
 
-    /* Romantic popup overlay */
+    /* Camera overlay */
     .overlay {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at top, rgba(255, 182, 193, 0.4), rgba(0, 0, 0, 0.95));
+      background: rgba(0, 0, 0, 0.95);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -234,15 +198,14 @@
     .overlay.show {
       opacity: 1;
       pointer-events: auto;
-      animation: fadeInBg 0.6s ease forwards;
     }
 
-    .popup {
-      background: rgba(255, 255, 255, 0.12);
+    .overlay-box {
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 30px;
       padding: 35px 30px 40px;
       text-align: center;
-      max-width: 450px;
+      max-width: 500px;
       width: 92%;
       color: #fff;
       box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
@@ -252,81 +215,80 @@
       z-index: 2001;
       transform: scale(0.9);
       transition: transform 0.5s ease;
-      overflow: hidden;
     }
 
-    .overlay.show .popup {
+    .overlay.show .overlay-box {
       transform: scale(1);
     }
 
-    .popup::before {
-      content: "";
-      position: absolute;
-      width: 220%;
-      height: 220%;
-      background: conic-gradient(from 180deg, 
-        rgba(255, 192, 203, 0.3), 
-        rgba(255, 105, 180, 0.7), 
-        rgba(255, 0, 76, 0.8), 
-        rgba(255, 192, 203, 0.3));
-      top: -60%;
-      left: -60%;
-      opacity: 0.45;
-      animation: rotateGlow 7s linear infinite;
-      z-index: -1;
-    }
-
-    .popup-inner {
-      position: relative;
-      z-index: 2;
-    }
-
-    .popup-heart {
-      width: 120px;
-      height: 120px;
-      margin: 0 auto 15px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 20%, #fff, #ff4b2b 40%, #a0003c 80%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 30px rgba(255, 0, 76, 0.8);
-      animation: heartbeat 1.2s ease-in-out infinite;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .popup-heart::after {
-      content: "❤️";
-      font-size: 52px;
-      animation: floatHeart 2.6s ease-in-out infinite;
-    }
-
-    .popup-text-main {
+    .overlay-title {
       font-size: 1.8rem;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       color: #ffcc00;
       font-weight: 700;
     }
 
-    .popup-text-sub {
-      font-size: 1.1rem;
-      margin-bottom: 15px;
-      opacity: 0.95;
+    .overlay-sub {
+      font-size: 1.15rem;
+      margin-bottom: 25px;
+      opacity: 0.9;
+      line-height: 1.6;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
     }
 
-    .popup-line {
-      font-size: 1.3rem;
-      margin-top: 10px;
-      font-weight: 800;
-      color: #ffcc00;
-      text-shadow: 0 0 20px rgba(255, 204, 0, 0.7);
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      margin-bottom: 25px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
 
-    .popup-gif {
-      width: 200px;
-      height: 200px;
-      margin: 15px auto;
+    video, canvas {
+      width: 100%;
+      border-radius: 18px;
+      background: #000;
+      display: block;
+    }
+
+    canvas {
+      display: none;
+    }
+
+    .capture-btn {
+      margin-top: 20px;
+      border: none;
+      padding: 16px 40px;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #ffcc00 0%, #ff9900 100%);
+      color: #000;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: 700;
+      box-shadow: 0 15px 35px rgba(255, 204, 0, 0.5);
+      transition: all 0.3s ease;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .capture-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(255, 204, 0, 0.7);
+    }
+
+    .valentine-message {
+      margin-top: 25px;
+      font-size: 1.2rem;
+      display: none;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .cat-kiss-gif {
+      width: 300px;
+      height: 300px;
+      margin: 20px auto;
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
@@ -334,16 +296,26 @@
       animation: floatGif 3s ease-in-out infinite;
     }
 
-    .popup-gif img {
+    .cat-kiss-gif img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
-    .close-hint {
-      margin-top: 15px;
-      font-size: 0.9rem;
-      opacity: 0.75;
+    .valentine-line {
+      font-weight: 800;
+      color: #ffcc00;
+      margin-top: 20px;
+      font-size: 1.5rem;
+      text-shadow: 0 0 20px rgba(255, 204, 0, 0.7);
+    }
+
+    /* Fireworks */
+    #fireworksCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1500;
     }
 
     /* Animations */
@@ -364,14 +336,9 @@
       50% { background-position: 100% 50%; }
     }
 
-    @keyframes containerFloat {
+    @keyframes cardFloat {
       0%, 100% { transform: translateY(0) rotate(0deg); }
       50% { transform: translateY(-20px) rotate(0.5deg); }
-    }
-
-    @keyframes shine {
-      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
     }
 
     @keyframes floatBg {
@@ -389,52 +356,67 @@
 
     @keyframes heartPop {
       0% {
-        transform: scale(0) translate(var(--start-x), var(--start-y));
+        transform: translateY(0) scale(0);
         opacity: 1;
       }
       20% {
-        transform: scale(1.3) translate(var(--mid-x), var(--mid-y));
+        transform: translateY(-20px) scale(1.2);
         opacity: 1;
       }
       100% {
-        transform: scale(0) translate(var(--end-x), var(--end-y));
+        transform: translateY(-80px) scale(0);
         opacity: 0;
       }
     }
 
-    @keyframes edgeHeartFloat {
+    @keyframes heartFall {
       0% {
-        transform: translate(var(--start-x), var(--start-y)) scale(0);
-        opacity: 0;
-      }
-      20% {
-        transform: translate(var(--mid-x), var(--mid-y)) scale(1.2);
+        transform: translateY(0) rotate(0deg);
         opacity: 1;
       }
+      10% {
+        transform: translateY(100px) rotate(10deg);
+      }
+      20% {
+        transform: translateY(200px) rotate(-10deg);
+      }
+      30% {
+        transform: translateY(300px) rotate(15deg);
+      }
+      40% {
+        transform: translateY(400px) rotate(-15deg);
+      }
+      50% {
+        transform: translateY(500px) rotate(20deg);
+      }
+      60% {
+        transform: translateY(600px) rotate(-20deg);
+      }
+      70% {
+        transform: translateY(700px) rotate(25deg);
+      }
+      80% {
+        transform: translateY(800px) rotate(-25deg);
+      }
+      90% {
+        transform: translateY(900px) rotate(30deg);
+        opacity: 0.5;
+      }
       100% {
-        transform: translate(var(--end-x), var(--end-y)) scale(0);
+        transform: translateY(1000px) rotate(30deg);
         opacity: 0;
       }
     }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-
-    @keyframes fadeInBg {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes rotateGlow {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes floatHeart {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @keyframes floatGif {
@@ -446,82 +428,86 @@
     /* Mobile optimizations */
     @media (max-width: 768px) {
       h1 { font-size: 1.8rem; }
-      h2 { font-size: 1.1rem; }
-      .heart-beat { font-size: 55px; }
+      .title-heart { font-size: 55px; }
+      p.subtitle { font-size: 1.1rem; padding: 15px; }
       button { 
         padding: 16px 30px; 
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         min-width: 140px;
       }
-      .btn-group { 
+      .buttons-row { 
         gap: 15px;
         flex-wrap: wrap;
       }
-      .popup { 
-        padding: 30px 25px 35px; 
+      .overlay-title { font-size: 1.6rem; }
+      .card { padding: 30px 20px 40px; }
+      .cat-kiss-gif { 
+        width: 250px; 
+        height: 250px;
       }
-      .popup-heart {
-        width: 100px;
-        height: 100px;
-      }
-      .popup-heart::after {
-        font-size: 42px;
-      }
-      .popup-text-main { font-size: 1.6rem; }
-      .popup-gif { 
-        width: 180px; 
-        height: 180px;
-      }
-      .container { padding: 30px 20px 40px; }
     }
 
     @media (max-width: 480px) {
       h1 { font-size: 1.6rem; }
-      .heart-beat { font-size: 50px; }
       button { 
         padding: 14px 25px; 
-        font-size: 1rem;
+        font-size: 1.1rem;
         min-width: 130px;
       }
-      .popup-gif { 
-        width: 160px; 
-        height: 160px;
+      .cat-kiss-gif { 
+        width: 220px; 
+        height: 220px;
       }
     }
   </style>
 </head>
 <body>
   <div class="bg-hearts" id="bgHearts"></div>
+  <canvas id="fireworksCanvas"></canvas>
 
-  <div class="container sparkles">
-    <div class="heart-beat">💘</div>
+  <div class="card">
+    <div class="title-heart">💘</div>
     <h1>Will you be my Valentine?</h1>
-    <h2>Meri jaan, sirf ek hi sahi option hai... 🥺</h2>
 
-    <div class="btn-group">
-      <button id="yesBtn">Haa ji 💝</button>
+    <p id="subtitle" class="subtitle">
+      Par aise nhi… phele pyaar se puchi de na. 😌
+    </p>
+
+    <div class="buttons-row">
+      <button id="yesBtn">Haa ji 😍</button>
       <button id="noBtn">Naa ji 🙈</button>
     </div>
   </div>
 
-  <!-- Romantic popup overlay -->
+  <!-- Camera overlay -->
   <div class="overlay" id="overlay">
-    <div class="popup">
-      <div class="popup-inner">
-        <div class="popup-heart"></div>
-        <div class="popup-text-main">Yaaay, meri Valentine! 💕</div>
-        <div class="popup-text-sub">Ab to official ho gaya, ab bhagna mana hai. 😌</div>
-        
-        <div class="popup-gif">
+    <div class="overlay-box">
+      <div class="overlay-title" id="overlayTitle">Aise nahi, phele puchi de 🥺</div>
+      <div class="overlay-sub" id="overlaySub">
+        Ab ek cute sa kissy selfie dedo, tab jaake milta hai Valentine message. 💋
+      </div>
+
+      <div class="video-wrapper" id="cameraSection">
+        <video id="video" autoplay playsinline></video>
+        <canvas id="canvas"></canvas>
+        <button class="capture-btn" id="captureBtn">Kiss de ke capture karo 😘</button>
+      </div>
+
+      <div class="valentine-message" id="finalMessage">
+        <div class="cat-kiss-gif">
           <img
-            src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif"
-            alt="Heart Gif"
+            src="https://media.giphy.com/media/S3Ot4lN2pO3HG/giphy.gif"
+            alt="Cat kissing camera gif"
             loading="lazy"
           />
         </div>
-        
-        <div class="popup-line">"Peela chawal le kar rahunga is saal."</div>
-        <div class="close-hint">Screen ko bas dekhte raho, main hi hoon yahin ❤️</div>
+        <div style="font-size:1.3rem;color:#ffcc00;font-weight:700;">Confirm ho gaya, meri Valentine! 💖</div>
+        <div>Selfie bhi aa gayi, ab suno dil se nikal kar aaya message. ✨</div>
+        <div style="margin:10px 0;color:#ff6b9d;font-weight:600;">Officially tum meri Valentine ho ab! 💞</div>
+        <div class="valentine-line">"Peela chawal le kar rahunga is saal."</div>
+        <div style="margin-top:15px;font-size:1rem;opacity:0.9;">
+          Ab tum bas ready rehna, baaki sab main sambhal lunga. 💫
+        </div>
       </div>
     </div>
   </div>
@@ -530,7 +516,15 @@
     // DOM Elements
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
+    const subtitle = document.getElementById("subtitle");
     const overlay = document.getElementById("overlay");
+    const overlayTitle = document.getElementById("overlayTitle");
+    const overlaySub = document.getElementById("overlaySub");
+    const cameraSection = document.getElementById("cameraSection");
+    const captureBtn = document.getElementById("captureBtn");
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const finalMessage = document.getElementById("finalMessage");
     const bgHearts = document.getElementById("bgHearts");
 
     // Background hearts
@@ -549,111 +543,24 @@
       }
     }
 
-    // Create heart particles from all edges of the window
-    function createEdgeHearts(count = 5) {
-      const colors = ['#ff2e63', '#ff6b9d', '#ffcc00', '#ff9900', '#ff3366', '#cc00ff', '#00ccff'];
-      
-      for (let i = 0; i < count; i++) {
-        setTimeout(() => {
-          const heart = document.createElement('div');
-          heart.className = 'edge-heart';
-          heart.innerHTML = '❤️';
-          
-          // Random edge: 0=top, 1=right, 2=bottom, 3=left
-          const edge = Math.floor(Math.random() * 4);
-          let startX, startY, midX, midY, endX, endY;
-          
-          const color = colors[Math.floor(Math.random() * colors.length)];
-          const size = 20 + Math.random() * 40;
-          
-          heart.style.color = color;
-          heart.style.fontSize = `${size}px`;
-          
-          switch(edge) {
-            case 0: // Top edge
-              startX = Math.random() * window.innerWidth;
-              startY = -50;
-              midX = startX + (Math.random() * 100 - 50);
-              midY = window.innerHeight * 0.2;
-              endX = startX + (Math.random() * 200 - 100);
-              endY = window.innerHeight + 50;
-              break;
-              
-            case 1: // Right edge
-              startX = window.innerWidth + 50;
-              startY = Math.random() * window.innerHeight;
-              midX = window.innerWidth * 0.8;
-              midY = startY + (Math.random() * 100 - 50);
-              endX = -50;
-              endY = startY + (Math.random() * 200 - 100);
-              break;
-              
-            case 2: // Bottom edge
-              startX = Math.random() * window.innerWidth;
-              startY = window.innerHeight + 50;
-              midX = startX + (Math.random() * 100 - 50);
-              midY = window.innerHeight * 0.8;
-              endX = startX + (Math.random() * 200 - 100);
-              endY = -50;
-              break;
-              
-            case 3: // Left edge
-              startX = -50;
-              startY = Math.random() * window.innerHeight;
-              midX = window.innerWidth * 0.2;
-              midY = startY + (Math.random() * 100 - 50);
-              endX = window.innerWidth + 50;
-              endY = startY + (Math.random() * 200 - 100);
-              break;
-          }
-          
-          // Set CSS custom properties for animation
-          heart.style.setProperty('--start-x', `${startX}px`);
-          heart.style.setProperty('--start-y', `${startY}px`);
-          heart.style.setProperty('--mid-x', `${midX}px`);
-          heart.style.setProperty('--mid-y', `${midY}px`);
-          heart.style.setProperty('--end-x', `${endX}px`);
-          heart.style.setProperty('--end-y', `${endY}px`);
-          
-          document.body.appendChild(heart);
-          
-          // Remove after animation
-          setTimeout(() => {
-            if (heart.parentNode) {
-              heart.remove();
-            }
-          }, 3000);
-        }, i * 200);
-      }
-    }
-
-    // Create heart particles from specific point
+    // Create heart particles that pop from buttons
     function createHeartParticle(x, y, color = '#ff2e63') {
       const heart = document.createElement('div');
       heart.className = 'heart-particle';
       heart.innerHTML = '❤️';
-      
-      const size = 20 + Math.random() * 30;
-      const angle = Math.random() * Math.PI * 2;
-      const distance = 100 + Math.random() * 100;
-      
-      const midX = Math.cos(angle) * (distance/2);
-      const midY = Math.sin(angle) * (distance/2);
-      const endX = Math.cos(angle) * distance;
-      const endY = Math.sin(angle) * distance;
-      
       heart.style.left = `${x}px`;
       heart.style.top = `${y}px`;
       heart.style.color = color;
-      heart.style.fontSize = `${size}px`;
+      heart.style.fontSize = `${20 + Math.random() * 20}px`;
       
-      // Set CSS custom properties
-      heart.style.setProperty('--start-x', '0px');
-      heart.style.setProperty('--start-y', '0px');
-      heart.style.setProperty('--mid-x', `${midX}px`);
-      heart.style.setProperty('--mid-y', `${midY}px`);
-      heart.style.setProperty('--end-x', `${endX}px`);
-      heart.style.setProperty('--end-y', `${endY}px`);
+      // Random direction
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 50 + Math.random() * 50;
+      const targetX = x + Math.cos(angle) * distance;
+      const targetY = y - distance;
+      
+      heart.style.setProperty('--target-x', `${targetX}px`);
+      heart.style.setProperty('--target-y', `${targetY}px`);
       
       document.body.appendChild(heart);
       
@@ -662,56 +569,173 @@
         if (heart.parentNode) {
           heart.remove();
         }
-      }, 1500);
+      }, 1200);
     }
 
-    // Create heart burst effect
-    function createHeartBurst(x, y, count = 20, color = '#ff2e63') {
+    // Create falling hearts from top of page
+    function createFallingHearts(count = 15) {
       for (let i = 0; i < count; i++) {
         setTimeout(() => {
-          createHeartParticle(x, y, color);
-        }, i * 30);
+          const heart = document.createElement('div');
+          heart.className = 'falling-heart';
+          heart.innerHTML = '❤️';
+          
+          // Random properties
+          const colors = ['#ff2e63', '#ff6b9d', '#ffcc00', '#ff9900', '#ff3366'];
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          const left = Math.random() * 100;
+          const delay = Math.random() * 2;
+          const duration = 6 + Math.random() * 4;
+          const size = 20 + Math.random() * 30;
+          
+          heart.style.left = `${left}%`;
+          heart.style.color = color;
+          heart.style.fontSize = `${size}px`;
+          heart.style.animationDelay = `${delay}s`;
+          heart.style.animationDuration = `${duration}s`;
+          
+          document.body.appendChild(heart);
+          
+          // Remove after animation
+          setTimeout(() => {
+            if (heart.parentNode) {
+              heart.remove();
+            }
+          }, duration * 1000 + 1000);
+        }, i * 200);
       }
     }
 
-    // Initialize background and start edge hearts
-    createBgHearts();
-    setInterval(createBgHearts, 3000);
-    
-    // Start continuous edge hearts from all sides
-    let edgeHeartInterval = setInterval(() => {
-      createEdgeHearts(3);
-    }, 800);
+    // Fireworks setup
+    const fwCanvas = document.getElementById("fireworksCanvas");
+    const fwCtx = fwCanvas.getContext("2d");
+    let fireworks = [];
+    let fwAnimationId = null;
 
-    // "Naa ji" escape logic
+    function resizeCanvas() {
+      fwCanvas.width = window.innerWidth;
+      fwCanvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    // Variables for no button escape
+    let stream = null;
     let isEscaping = false;
     let escapeStarted = false;
-    let hoverCount = 0;
+    let lastEscapeTime = 0;
+    const ESCAPE_COOLDOWN = 300; // ms
 
-    // Make "Naa ji" run away like a person
-    function moveNoButton() {
-      if (!escapeStarted) {
+    // Initialize background
+    createBgHearts();
+    setInterval(createBgHearts, 3000);
+
+    // Track mouse position
+    let mouseX = 0;
+    let mouseY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      
+      // Check if mouse is near no button
+      if (!escapeStarted) return;
+      
+      const btnRect = noBtn.getBoundingClientRect();
+      const btnCenterX = btnRect.left + btnRect.width / 2;
+      const btnCenterY = btnRect.top + btnRect.height / 2;
+      
+      const distance = Math.sqrt(
+        Math.pow(mouseX - btnCenterX, 2) + 
+        Math.pow(mouseY - btnCenterY, 2)
+      );
+      
+      // If mouse is within 100px of button, escape!
+      if (distance < 100) {
+        escapeFromCursor();
+      }
+    });
+
+    // Track touch for mobile
+    document.addEventListener('touchmove', (e) => {
+      const touch = e.touches[0];
+      mouseX = touch.clientX;
+      mouseY = touch.clientY;
+      
+      if (!escapeStarted) return;
+      
+      const btnRect = noBtn.getBoundingClientRect();
+      const btnCenterX = btnRect.left + btnRect.width / 2;
+      const btnCenterY = btnRect.top + btnRect.height / 2;
+      
+      const distance = Math.sqrt(
+        Math.pow(mouseX - btnCenterX, 2) + 
+        Math.pow(mouseY - btnCenterY, 2)
+      );
+      
+      if (distance < 100) {
+        escapeFromCursor();
+      }
+    }, { passive: true });
+
+    // Simple escape function
+    function escapeFromCursor() {
+      const now = Date.now();
+      if (now - lastEscapeTime < ESCAPE_COOLDOWN) return;
+      
+      lastEscapeTime = now;
+      
+      // Switch to fixed positioning if not already
+      if (!isEscaping) {
         noBtn.classList.add('escaping');
-        escapeStarted = true;
         isEscaping = true;
       }
-
-      const maxX = window.innerWidth - 140;
-      const maxY = window.innerHeight - 140;
-
-      const newX = Math.random() * maxX;
-      const newY = Math.random() * maxY;
-
-      noBtn.style.left = newX + "px";
-      noBtn.style.top = newY + "px";
-      noBtn.style.transform = "rotate(" + (Math.random() * 30 - 15) + "deg)";
       
-      // Create hearts when button moves
-      createHeartBurst(newX + 70, newY + 20, 8, '#666');
+      // Get button dimensions
+      const btnWidth = noBtn.offsetWidth;
+      const btnHeight = noBtn.offsetHeight;
+      const padding = 50;
+      
+      // Calculate safe area
+      const maxX = window.innerWidth - btnWidth - padding;
+      const maxY = window.innerHeight - btnHeight - padding;
+      const minX = padding;
+      const minY = padding;
+      
+      // Try to move away from cursor
+      let newX, newY;
+      let attempts = 0;
+      const maxAttempts = 10;
+      
+      do {
+        // Try to move to opposite side of cursor
+        newX = mouseX < window.innerWidth / 2 ? 
+          Math.random() * (maxX - window.innerWidth/2) + window.innerWidth/2 :
+          Math.random() * (window.innerWidth/2 - minX) + minX;
+          
+        newY = mouseY < window.innerHeight / 2 ?
+          Math.random() * (maxY - window.innerHeight/2) + window.innerHeight/2 :
+          Math.random() * (window.innerHeight/2 - minY) + minY;
+          
+        attempts++;
+        
+        // Ensure minimum distance from current position
+        const currentX = parseInt(noBtn.style.left) || btnWidth;
+        const currentY = parseInt(noBtn.style.top) || btnHeight;
+        const distance = Math.sqrt(Math.pow(newX - currentX, 2) + Math.pow(newY - currentY, 2));
+        
+        if (distance > 80 || attempts > maxAttempts) break;
+      } while (true);
+      
+      // Apply new position
+      noBtn.style.left = `${newX}px`;
+      noBtn.style.top = `${newY}px`;
     }
 
-    // No button events
-    noBtn.addEventListener("mouseenter", () => {
+    // No button events - with heart particles
+    let hoverCount = 0;
+    
+    noBtn.addEventListener('mouseenter', () => {
       hoverCount++;
       
       // Create heart particles
@@ -719,21 +743,46 @@
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       
-      createHeartBurst(centerX, centerY, 8, '#666');
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          createHeartParticle(centerX, centerY, '#666');
+        }, i * 100);
+      }
       
-      if (hoverCount <= 2) {
-        // First two hovers: just bounce
+      if (hoverCount === 1) {
+        // First hover: just wiggle
         noBtn.style.transform = 'translateY(-5px)';
         setTimeout(() => {
           noBtn.style.transform = 'translateY(0)';
         }, 300);
+      } else if (hoverCount === 2) {
+        // Second hover: bigger bounce
+        noBtn.style.transform = 'translateY(-10px) scale(1.1)';
+        setTimeout(() => {
+          noBtn.style.transform = 'translateY(0) scale(1)';
+        }, 300);
       } else {
-        // Third+ hover: start escaping
-        moveNoButton();
+        // Third+ hover: start escape mode
+        if (!escapeStarted) {
+          escapeStarted = true;
+          noBtn.classList.add('escaping');
+          isEscaping = true;
+          
+          // Move to random starting position
+          const btnWidth = noBtn.offsetWidth;
+          const btnHeight = noBtn.offsetHeight;
+          const padding = 50;
+          
+          const maxX = window.innerWidth - btnWidth - padding;
+          const maxY = window.innerHeight - btnHeight - padding;
+          const minX = padding;
+          const minY = padding;
+          
+          noBtn.style.left = `${Math.random() * (maxX - minX) + minX}px`;
+          noBtn.style.top = `${Math.random() * (maxY - minY) + minY}px`;
+        }
       }
     });
-
-    noBtn.addEventListener("click", moveNoButton);
 
     // Yes button with heart particles
     yesBtn.addEventListener('mouseenter', () => {
@@ -742,11 +791,80 @@
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       
-      createHeartBurst(centerX, centerY, 12, '#ff2e63');
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+          createHeartParticle(centerX, centerY, '#ff2e63');
+        }, i * 80);
+      }
     });
 
-    // Show romantic popup on "Haa ji"
-    yesBtn.addEventListener("click", () => {
+    // Mobile touch for no button
+    noBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      hoverCount++;
+      
+      // Create heart particles
+      const rect = noBtn.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          createHeartParticle(centerX, centerY, '#666');
+        }, i * 100);
+      }
+      
+      if (hoverCount === 1) {
+        // First touch: bounce
+        noBtn.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          noBtn.style.transform = 'scale(1)';
+        }, 300);
+      } else if (hoverCount === 2) {
+        // Second touch: bigger bounce
+        noBtn.style.transform = 'scale(1.2)';
+        setTimeout(() => {
+          noBtn.style.transform = 'scale(1)';
+        }, 300);
+      } else {
+        // Third+ touch: start escape mode
+        if (!escapeStarted) {
+          escapeStarted = true;
+          noBtn.classList.add('escaping');
+          isEscaping = true;
+          
+          // Move to random position
+          const btnWidth = noBtn.offsetWidth;
+          const btnHeight = noBtn.offsetHeight;
+          const padding = 50;
+          
+          const maxX = window.innerWidth - btnWidth - padding;
+          const maxY = window.innerHeight - btnHeight - padding;
+          const minX = padding;
+          const minY = padding;
+          
+          noBtn.style.left = `${Math.random() * (maxX - minX) + minX}px`;
+          noBtn.style.top = `${Math.random() * (maxY - minY) + minY}px`;
+        }
+      }
+    }, { passive: false });
+
+    // Mobile touch for yes button
+    yesBtn.addEventListener('touchstart', (e) => {
+      // Create heart particles from yes button
+      const rect = yesBtn.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+          createHeartParticle(centerX, centerY, '#ff2e63');
+        }, i * 80);
+      }
+    });
+
+    // Yes button click
+    yesBtn.addEventListener('click', async () => {
       // Button animation
       yesBtn.style.transform = 'scale(0.95)';
       
@@ -755,62 +873,227 @@
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       
-      createHeartBurst(centerX, centerY, 25, '#ff2e63');
-      
-      // Also create edge hearts from all sides
-      createEdgeHearts(10);
+      for (let i = 0; i < 15; i++) {
+        setTimeout(() => {
+          createHeartParticle(centerX, centerY, '#ff2e63');
+        }, i * 50);
+      }
       
       setTimeout(() => {
         yesBtn.style.transform = 'scale(1)';
       }, 200);
       
+      // Show subtitle
+      subtitle.classList.add('visible');
+      
       // Show overlay
-      overlay.classList.add("show");
-      
-      // Increase edge hearts frequency for celebration
-      clearInterval(edgeHeartInterval);
-      edgeHeartInterval = setInterval(() => {
-        createEdgeHearts(8);
-      }, 400);
-      
-      // Massive heart burst from all sides
       setTimeout(() => {
-        for(let i = 0; i < 15; i++) {
-          setTimeout(() => createEdgeHearts(3), i * 100);
-        }
+        overlay.classList.add('show');
+        overlayTitle.textContent = "Aise nahi, phele puchi de 🥺";
+        overlaySub.textContent = "Ab ek cute sa kissy selfie dedo, tab jaake milta hai Valentine message. 💋";
+        finalMessage.style.display = "none";
+        cameraSection.style.display = "block";
       }, 500);
-      
-      // Create hearts around popup
-      for(let i = 0; i < 20; i++) {
-        setTimeout(() => {
-          const popupRect = document.querySelector('.popup').getBoundingClientRect();
-          const x = popupRect.left + Math.random() * popupRect.width;
-          const y = popupRect.top + Math.random() * popupRect.height;
-          createHeartParticle(x, y, '#ffcc00');
-        }, i * 150);
+
+      // Start camera
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ 
+          video: { 
+            facingMode: "user",
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }, 
+          audio: false 
+        });
+        video.srcObject = stream;
+      } catch (err) {
+        overlaySub.textContent = "Camera allow nahi kiya toh kaise selfie lunga main? 🥲 (Settings se allow kar dena.)";
       }
-      
-      // Return to normal heart frequency after 30 seconds
-      setTimeout(() => {
-        clearInterval(edgeHeartInterval);
-        edgeHeartInterval = setInterval(() => {
-          createEdgeHearts(3);
-        }, 800);
-      }, 30000);
     });
 
-    // Create initial heart burst from all edges on page load
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        for(let i = 0; i < 10; i++) {
-          setTimeout(() => createEdgeHearts(2), i * 300);
-        }
+    // Download image
+    function downloadCanvasImage() {
+      const dataURL = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = dataURL;
+      link.download = "hamari-valentine-selfie.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Fireworks system
+    function createFirework(x, y) {
+      const colors = ["#ff2e63", "#ffcc00", "#00ccff", "#ff6b9d", "#cc00ff"];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const particles = [];
+      const count = 30 + Math.random() * 20;
+
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 4 + 2;
+        particles.push({
+          x: x || Math.random() * fwCanvas.width,
+          y: y || Math.random() * fwCanvas.height * 0.4,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          radius: 1.5 + Math.random() * 2,
+          alpha: 1,
+          color,
+          decay: 0.02
+        });
+      }
+      fireworks.push(particles);
+    }
+
+    function drawFireworks() {
+      fwCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      fwCtx.fillRect(0, 0, fwCanvas.width, fwCanvas.height);
+      
+      fireworks.forEach((particles, idx) => {
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.05;
+          p.alpha -= p.decay;
+
+          fwCtx.save();
+          fwCtx.globalAlpha = p.alpha;
+          fwCtx.fillStyle = p.color;
+          fwCtx.beginPath();
+          fwCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          fwCtx.fill();
+          fwCtx.restore();
+        });
         
-        // Create hearts from center of screen
+        fireworks[idx] = particles.filter(p => p.alpha > 0);
+      });
+      
+      fireworks = fireworks.filter(p => p.length > 0);
+      
+      if (fireworks.length > 0) {
+        fwAnimationId = requestAnimationFrame(drawFireworks);
+      }
+    }
+
+    function startFireworks() {
+      // Center burst
+      createFirework(fwCanvas.width/2, fwCanvas.height/4);
+      
+      // Surrounding bursts
+      for (let i = 0; i < 6; i++) {
         setTimeout(() => {
-          createHeartBurst(window.innerWidth/2, window.innerHeight/2, 15, '#ff2e63');
-        }, 1000);
+          const angle = (i / 6) * Math.PI * 2;
+          const distance = 120 + Math.random() * 80;
+          createFirework(
+            fwCanvas.width/2 + Math.cos(angle) * distance,
+            fwCanvas.height/4 + Math.sin(angle) * distance
+          );
+        }, i * 200);
+      }
+      
+      if (!fwAnimationId) {
+        fwAnimationId = requestAnimationFrame(drawFireworks);
+      }
+    }
+
+    // Capture selfie
+    captureBtn.addEventListener('click', () => {
+      if (!stream) {
+        overlaySub.textContent = "Pehle camera allow karo na, fir selfie lenge. 🥹";
+        return;
+      }
+
+      // Button animation
+      captureBtn.style.transform = 'scale(0.95)';
+      captureBtn.textContent = 'Capturing... ✨';
+      
+      setTimeout(() => {
+        const track = stream.getVideoTracks()[0];
+        const settings = track.getSettings();
+        const width = settings.width || 1280;
+        const height = settings.height || 720;
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, 0, 0, width, height);
+        
+        // Add romantic filter
+        ctx.fillStyle = 'rgba(255, 46, 99, 0.15)';
+        ctx.fillRect(0, 0, width, height);
+        
+        // Add text
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.font = 'bold 30px Poppins';
+        ctx.textAlign = 'center';
+        ctx.fillText('Meri Valentine 💖', width/2, height - 60);
+        
+        ctx.font = '20px Poppins';
+        const today = new Date();
+        ctx.fillText(today.toLocaleDateString('hi-IN'), width/2, height - 25);
+
+        // Stop camera
+        stream.getTracks().forEach(t => t.stop());
+        stream = null;
+
+        // Download
+        setTimeout(() => downloadCanvasImage(), 300);
+
+        // Show final message
+        video.style.display = 'none';
+        canvas.style.display = 'none';
+        cameraSection.style.display = 'none';
+        captureBtn.style.display = 'none';
+        
+        overlayTitle.textContent = 'Confirm ho gaya, meri Valentine! 💖';
+        overlaySub.textContent = 'Selfie bhi aa gayi, ab suno dil se nikal kar aaya message. ✨';
+        finalMessage.style.display = 'block';
+
+        // Start celebration - fireworks and falling hearts
+        startFireworks();
+        
+        // Start falling hearts from top
+        createFallingHearts(20);
+        
+        // Continue falling hearts every few seconds
+        const fallingHeartsInterval = setInterval(() => {
+          createFallingHearts(5);
+        }, 2000);
+        
+        // Stop after 30 seconds
+        setTimeout(() => {
+          clearInterval(fallingHeartsInterval);
+        }, 30000);
+        
+        // Add background hearts
+        for(let i = 0; i < 15; i++) {
+          setTimeout(() => createBgHearts(), i * 100);
+        }
       }, 500);
+    });
+
+    // Make sure no button starts in correct position
+    window.addEventListener('load', () => {
+      // Reset no button position
+      noBtn.style.position = 'relative';
+      noBtn.style.left = '';
+      noBtn.style.top = '';
+      noBtn.style.transform = '';
+      
+      // Add initial heart particles on page load
+      setTimeout(() => {
+        const rect = yesBtn.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => {
+            createHeartParticle(centerX, centerY, '#ff2e63');
+          }, i * 300);
+        }
+      }, 1000);
     });
   </script>
 </body>
